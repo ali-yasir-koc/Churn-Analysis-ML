@@ -6,6 +6,7 @@
 # home phone and Internet services in the third quarter.
 # Shows which install services you've ordered, gone or signed up for.
 
+
 ########################## Importing Library and Settings  ###########################
 import numpy as np
 import pandas as pd
@@ -357,54 +358,6 @@ for name, model in models:
     print(f"Recall: {round(cv_results['test_recall'].mean(), 4)}")
     print(f"Precision: {round(cv_results['test_precision'].mean(), 4)}")
     print(f"F1: {round(cv_results['test_f1'].mean(), 4)}")
-########## LR ##########
-#Accuracy: 0.8062
-#Auc: 0.8466
-#Recall: 0.55
-#Precision: 0.6623
-#F1: 0.6009
-########### KNN ##########
-#Accuracy: 0.7698
-#Auc: 0.7826
-#Recall: 0.5265
-#Precision: 0.5718
-#F1: 0.5482
-########### CART ##########
-#Accuracy: 0.7241
-#Auc: 0.6527
-#Recall: 0.496
-#Precision: 0.4808
-#F1: 0.4883
-########### RF ##########
-#Accuracy: 0.7863
-#Auc: 0.8273
-#Recall: 0.4842
-#Precision: 0.6266
-#F1: 0.5461
-########### SVM ##########
-#Accuracy: 0.7964
-#Auc: 0.7986
-#Recall: 0.4751
-#Precision: 0.6617
-#F1: 0.553
-########### XGB ##########
-#Accuracy: 0.7823
-#Auc: 0.8246
-#Recall: 0.5019
-#Precision: 0.6091
-#F1: 0.5502
-########### LightGBM ##########
-#Accuracy: 0.7919
-#Auc: 0.8357
-#Recall: 0.5126
-#Precision: 0.6338
-#F1: 0.5665
-########### CatBoost ##########
-#Accuracy: 0.7961
-#Auc: 0.8403
-#Recall: 0.5051
-#Precision: 0.6492
-#F1: 0.568
 
 
 ########################## Random Forests ###########################
@@ -420,19 +373,17 @@ rf_best_grid = GridSearchCV(rf_model, rf_params, cv=5, n_jobs=-1, verbose=True).
 rf_best_grid.best_params_
 rf_best_grid.best_score_
 
-best_rf = {'max_depth': 8, 'max_features': 3, 'min_samples_split': 20, 'n_estimators': 100}
 
-rf_final = rf_model.set_params(**best_rf, random_state=17).fit(X, y)
+rf_final = rf_model.set_params(**rf_best_grid.best_params_, random_state=17).fit(X, y)
 
 
 cv_results = cross_validate(rf_final, X, y, cv=5, scoring=["accuracy", "f1", "roc_auc"])
 
 cv_results['test_accuracy'].mean()
-# 0.8030673349893542
+
 cv_results['test_f1'].mean()
-# 0.5669193179226717
+
 cv_results['test_roc_auc'].mean()
-# 0.8464922569526181
 
 
 ##########################  GBoost  ###########################
@@ -451,11 +402,10 @@ xgboost_final = xgboost_model.set_params(**best_xgbost, random_state=17).fit(X, 
 cv_results = cross_validate(xgboost_final, X, y, cv=5, scoring=["accuracy", "f1", "roc_auc"])
 
 cv_results['test_accuracy'].mean()
-#0.8024999596748177
+
 cv_results['test_f1'].mean()
-#0.5796672815329127
+
 cv_results['test_roc_auc'].mean()
-#0.8464124940265425
 
 
 ##########################  LightGBM  ###########################
@@ -473,11 +423,10 @@ lgbm_final = lgbm_model.set_params(**best_lgbm, random_state=17).fit(X, y)
 cv_results = cross_validate(lgbm_final, X, y, cv=5, scoring=["accuracy", "f1", "roc_auc"])
 
 cv_results['test_accuracy'].mean()
-# 0.7998023057939222
+
 cv_results['test_f1'].mean()
-# 0.5660816055951456
+
 cv_results['test_roc_auc'].mean()
-# 0.8457970515415919
 
 
 ########################## CatBoost ###########################
@@ -495,11 +444,10 @@ catboost_final = catboost_model.set_params(**best_catboost, random_state=17).fit
 cv_results = cross_validate(catboost_final, X, y, cv=5, scoring=["accuracy", "f1", "roc_auc"])
 
 cv_results['test_accuracy'].mean()
-# 0.8476472861701115
+
 cv_results['test_f1'].mean()
-# 0.5822212447578548
+
 cv_results['test_roc_auc'].mean()
-# 0.8046290284857088
 
 
 ########################### Feature Importance  ###########################
